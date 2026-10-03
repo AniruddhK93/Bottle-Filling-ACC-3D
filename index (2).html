@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACC PLC - 3D Bottle Filling Scene</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <h1>3D Bottle Filling System</h1>
+        <div class="subtitle">ACC PLC training scene • X/Y interface</div>
+      </div>
+      <div class="status-group">
+        <span id="modeBadge" class="badge standalone">STANDALONE</span>
+        <span id="simBadge" class="badge neutral">NO SIMULATOR</span>
+        <span id="stateText">STOPPED</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel outputs">
+        <h2>OUTPUTS Y</h2>
+        <div class="io-row">
+          <div><span class="address">Y1</span><span>Conveyor Motor</span></div>
+          <span id="y1Led" class="led"></span>
+        </div>
+        <div class="io-row">
+          <div><span class="address">Y2</span><span>Fill Valve / Pump</span></div>
+          <span id="y2Led" class="led"></span>
+        </div>
+
+        <div class="info-box">
+          <strong>PLC outputs</strong>
+          <div>Y1 ON → conveyor moves</div>
+          <div>Y2 ON → filling starts</div>
+        </div>
+
+        <button id="startBtn" class="control-btn">START</button>
+        <button id="stopBtn" class="control-btn stop">STOP</button>
+        <button id="resetBtn" class="control-btn secondary">RESET</button>
+      </aside>
+
+      <section id="sceneContainer">
+        <div id="sceneCanvas"></div>
+
+        <div class="hud">
+          <div><strong>Sequence:</strong> Conveyor → Bottle Detect → Fill → Conveyor</div>
+          <div><strong>Fill Time:</strong> <span id="fillTime">0.0</span> / 5.0 s</div>
+          <div><strong>Bottle Sensor X3:</strong> <span id="x3Text">OFF</span></div>
+        </div>
+
+        <div class="legend">
+          <span><i class="legend-dot bottle"></i>Bottle</span>
+          <span><i class="legend-dot sensor"></i>Photo Sensor</span>
+          <span><i class="legend-dot nozzle"></i>Filling Nozzle</span>
+        </div>
+      </section>
+
+      <aside class="panel inputs">
+        <h2>INPUTS X</h2>
+
+        <div class="io-row">
+          <div><span class="address">X1</span><span>START PB</span></div>
+          <span id="x1Led" class="led"></span>
+        </div>
+
+        <div class="io-row">
+          <div><span class="address">X2</span><span>STOP PB (N.C.)</span></div>
+          <span id="x2Led" class="led on"></span>
+        </div>
+
+        <div class="io-row">
+          <div><span class="address">X3</span><span>Bottle Sensor</span></div>
+          <span id="x3Led" class="led"></span>
+        </div>
+
+        <div class="io-row">
+          <div><span class="address">X4</span><span>Fill Complete</span></div>
+          <span id="x4Led" class="led"></span>
+        </div>
+
+        <div class="info-box">
+          <strong>Sensor logic</strong>
+          <div>X3 ON when bottle is at filling station.</div>
+          <div>X4 ON when 5-second fill is complete.</div>
+        </div>
+
+        <div class="log-box">
+          <h3>Sequence Log</h3>
+          <div id="eventLog"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Use the classic r160 build. The build/three.min.js file was removed
+       starting with r161, so r160 is intentionally used here. -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="scene.js"></script>
+</body>
+</html>
