@@ -1,6 +1,3 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
 /*
   ACC PLC interface used here:
     Channel: acc-plc-link
@@ -13,7 +10,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
   separately in ACC's acc-scenes.js.
 */
 
-const ACC_CHANNEL = "acc-plc-link";
+if (!window.THREE) {\n  document.body.insertAdjacentHTML("afterbegin", "<div style=\"padding:12px;background:#4a1f1f;color:#fff;font-family:Arial\">Three.js could not be loaded. Check the internet connection/CDN access.</div>");\n  throw new Error("Three.js library did not load.");\n}\n\nconst ACC_CHANNEL = "acc-plc-link";
 const accChannel = "BroadcastChannel" in window ? new BroadcastChannel(ACC_CHANNEL) : null;
 
 // -----------------------------------------------------------------------------
@@ -74,7 +71,16 @@ const ui = {
 // THREE.JS SCENE
 // -----------------------------------------------------------------------------
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+} catch (error) {
+  document.getElementById("sceneCanvas").innerHTML =
+    '<div style="padding:30px;color:#ffb4b4;font-family:Arial">' +
+    '<h2>3D/WebGL could not start</h2>' +
+    '<p>' + String(error) + '</p></div>';
+  throw error;
+}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(10, 10);
 renderer.shadowMap.enabled = true;
@@ -90,12 +96,10 @@ scene.fog = new THREE.Fog(0x0b1015, 16, 30);
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
 camera.position.set(10, 8, 11);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0.9, 0);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.minDistance = 7;
-controls.maxDistance = 24;
+const controls = {
+  update() {}
+};
+camera.lookAt(new THREE.Vector3(0, 0.9, 0));
 
 scene.add(new THREE.HemisphereLight(0xb8d7ff, 0x20252a, 2.0));
 
